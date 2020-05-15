@@ -7,7 +7,7 @@ includes    = []
 defines     = []
 romfs       = 'romfs'
 
-npdm_json = ''
+npdm_json = 'config.json'
 
 author = 'Unspecified Author'
 icon   = 'icon.jpg'
@@ -38,7 +38,7 @@ arch = ['-march=armv8-a+crc+crypto', '-mtune=cortex-a57', '-mtp=soft']
 c_args = ['-g', '-Wall', '-O2', '-ffunction-sections', '-D__SWITCH__'] + arch + defines
 cpp_args = c_args + ['-fno-rtti', '-fno-exceptions']
 
-link_args = ['-specs=' + dkp + '/libnx/switch.specs', '-g'] + arch + ['-fPIE', '-Wl,-Map,' + meson.project_name() + '.map']
+link_args = ['-specs=' + dkp + '/libnx/switch.specs', '-g', '-fPIE'] + arch
 
 exe = executable(meson.project_name() + '.elf', sources,
     include_directories : includes,
@@ -59,12 +59,13 @@ endif
 
 output = ''
 cmd = [files('build.py'),
-    '--build-dir', meson.current_build_dir(),
-    '--input', '@INPUT@',
-    '--output', '@OUTPUT@',
+    '--out-dir', '@OUTDIR@',
+    '--input',   '@INPUT@',
+    '--output',  '@OUTPUT0@',
+    '--tmp-dir', '@PRIVATE_DIR@',
 ]
 
-if npdm_json == ''
+if not fs.is_file(npdm_json)
     output = meson.project_name() + '.nro'
 
     if fs.is_dir(romfs)
@@ -75,21 +76,21 @@ if npdm_json == ''
 
     if not no_nacp
         cmd += [
-            '--name', meson.project_name(),
-            '--author', author,
+            '--name',    meson.project_name(),
+            '--author',  author,
             '--version', meson.project_version(),
         ]
     else
         cmd += ['--no-nacp']
     endif
 else
-    output = 'exefs.nsp'
+    output = meson.project_name() + '.nsp'
 
     cmd += ['--npdm-json', files(npdm_json)]
 endif
 
 custom_target(output,
-    output  : output,
+    output  : [output, output + '@cus'],
     input   : exe,
     command : cmd,
 

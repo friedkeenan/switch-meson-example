@@ -5,10 +5,17 @@ cpp = '/opt/devkitpro/devkitA64/bin/aarch64-none-elf-g++'
 ar    = '/opt/devkitpro/devkitA64/bin/aarch64-none-elf-ar'
 strip = '/opt/devkitpro/devkitA64/bin/aarch64-none-elf-strip'
 
-pkgconfig = '/opt/devkitpro/portlibs/switch/lib/pkgconfig'
+pkgconfig = 'pkg-config'
+#pkgconfig = '/opt/devkitpro/portlibs/switch/bin/aarch64-none-elf-pkg-config'
+
+sdl2-config = '/opt/devkitpro/portlibs/switch/bin/sdl2-config'
+
+[properties]
+#sys_root          = '/opt/devkitpro/portlibs/switch'
+pkg_config_libdir = ['/opt/devkitpro/portlibs/switch/lib/pkgconfig']
 
 [host_machine]
-system = 'horizon'
+system     = 'horizon'
 cpu_family = 'aarch64'
-cpu = 'armv8'
-endian = 'little'
+cpu        = 'armv8'
+endian     = 'little'
