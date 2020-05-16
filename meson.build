@@ -14,6 +14,8 @@ icon   = 'icon.jpg'
 
 dependencies = []
 
+stem = meson.current_source_dir().split('/')[-1]
+
 no_nacp = false
 
 dkp = run_command('sh', '-c', 'echo -n $DEVKITPRO').stdout() # Needs sh -c for some reason
@@ -40,7 +42,7 @@ cpp_args = c_args + ['-fno-rtti', '-fno-exceptions']
 
 link_args = ['-specs=' + dkp + '/libnx/switch.specs', '-g', '-fPIE'] + arch
 
-exe = executable(meson.project_name() + '.elf', sources,
+exe = executable(stem + '.elf', sources,
     include_directories : includes,
     dependencies        : dependencies,
 
@@ -66,7 +68,7 @@ cmd = [files('build.py'),
 ]
 
 if not fs.is_file(npdm_json)
-    output = meson.project_name() + '.nro'
+    output = stem + '.nro'
 
     if fs.is_dir(romfs)
         cmd += ['--romfs', files(romfs)]
@@ -84,7 +86,7 @@ if not fs.is_file(npdm_json)
         cmd += ['--no-nacp']
     endif
 else
-    output = meson.project_name() + '.nsp'
+    output = stem + '.nsp'
 
     cmd += ['--npdm-json', files(npdm_json)]
 endif
