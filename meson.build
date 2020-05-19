@@ -71,7 +71,7 @@ if not fs.is_file(npdm_json)
     output = stem + '.nro'
 
     if fs.is_dir(romfs)
-        cmd += ['--romfs', files(romfs)]
+        cmd += ['--romfs', meson.current_source_dir() + '/' + romfs]
     endif
 
     cmd += ['--icon', files(icon)]
